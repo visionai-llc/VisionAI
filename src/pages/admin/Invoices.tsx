@@ -2,10 +2,7 @@ import React from 'react';
 import AdminLayout from '../../components/AdminLayout';
 import { FileText } from 'lucide-react';
 
-const INVOICE_URL =
-  import.meta.env.PROD
-    ? '/admin/invoices-app' // works on Vercel
-    : 'https://sparkling-stardust-b46625.netlify.app/'; // works locally
+const INVOICE_URL = 'https://sparkling-stardust-b46625.netlify.app/';
 
 const Invoices: React.FC = () => {
   return (
@@ -16,6 +13,9 @@ const Invoices: React.FC = () => {
             src={INVOICE_URL}
             title="Invoice System"
             className="w-full h-full border-none"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+            allow="clipboard-read; clipboard-write"
+            loading="eager"
           />
         </div>
       </div>
