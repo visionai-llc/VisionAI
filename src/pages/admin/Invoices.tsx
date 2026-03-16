@@ -13,7 +13,7 @@ const Invoices: React.FC = () => {
             src={INVOICE_URL}
             title="Invoice System"
             className="w-full h-full border-none"
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-downloads"
             allow="clipboard-read; clipboard-write"
             loading="eager"
           />
