@@ -10,6 +10,16 @@ export default defineConfig({
   base: '/',
   publicDir: 'public',
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@app': path.resolve(__dirname, 'src/app'),
+      '@features': path.resolve(__dirname, 'src/features'),
+      '@shared': path.resolve(__dirname, 'src/shared'),
+      '@components': path.resolve(__dirname, 'src/shared/components'),
+      '@contexts': path.resolve(__dirname, 'src/shared/contexts'),
+    },
+  },
   optimizeDeps: {
     exclude: ['lucide-react'],
   },

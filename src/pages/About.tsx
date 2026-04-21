@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Target, Award, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { FALLBACK_ABOUT } from '../data/fallbackAbout';
+import { LEADERSHIP_TEAM } from '../data/leadershipTeam';
+import RouteMap from '../components/RouteMap';
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 interface Director {
   _id: string;
@@ -40,10 +44,14 @@ interface AboutData {
   };
 }
 
+const COMPANY_SNAPSHOT = [
+  { label: 'Legal Entity', value: 'Vision AI 合同会社 (GK / LLC)' },
+  { label: 'Incorporation', value: 'December 2024' },
+];
+
 const About: React.FC = () => {
   const navigate = useNavigate();
-  const [aboutData, setAboutData] = useState<AboutData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [aboutData, setAboutData] = useState<AboutData>(FALLBACK_ABOUT as AboutData);
 
   useEffect(() => {
     fetchAboutData();
@@ -51,15 +59,15 @@ const About: React.FC = () => {
 
   const fetchAboutData = async () => {
     try {
-      const response = await fetch('/api/about');
+      const response = await fetchWithTimeout('/api/about');
       if (response.ok) {
         const data = await response.json();
-        setAboutData(data); // API returns single object
+        if (data && data.companyInfo?.mission && data.companyInfo?.vision && data.companyInfo?.description) {
+          setAboutData(data);
+        }
       }
     } catch (error) {
       console.error('Error fetching about data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -91,25 +99,6 @@ const About: React.FC = () => {
     },
   ];
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (!aboutData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">About information not available</h2>
-          <p className="text-gray-600">Please try again later.</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div>
       {/* Hero Section - Fullscreen background video with overlay content */}
@@ -128,7 +117,7 @@ const About: React.FC = () => {
         </div>
         <div className="relative z-10 flex items-center justify-center text-center min-h-screen px-4">
           <div className="max-w-3xl blog-hero-text slide-in-once slide-delay-200">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300 mb-6 heading-zoom">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 mb-6 heading-zoom">
               About VisionAI
             </h1>
             <p className="text-lg md:text-2xl text-blue-100 leading-relaxed sub-wipe">
@@ -151,7 +140,7 @@ const About: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Mission</h2>
+              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 mb-6">Our Mission</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
                 {aboutData.companyInfo.mission}
               </p>
@@ -162,7 +151,7 @@ const About: React.FC = () => {
             </div>
             
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Vision</h2>
+              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 mb-6">Our Vision</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
                 {aboutData.companyInfo.vision}
               </p>
@@ -175,11 +164,49 @@ const About: React.FC = () => {
         </div>
       </section>
 
+      {/* Company Transparency */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 mb-4">
+              Company Transparency
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              We publish core company facts so clients can perform clear and confident due diligence.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {COMPANY_SNAPSHOT.map((item) => (
+              <article
+                key={item.label}
+                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 shadow-sm"
+              >
+                <p className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  {item.label}
+                </p>
+                <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
+                  {item.value}
+                </p>
+              </article>
+            ))}
+            <article className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 shadow-sm">
+              <p className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                Headquarters
+              </p>
+              <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
+                {aboutData.companyInfo.headquarters || 'Tsukuba, Ibaraki, Japan'}
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* Values */}
       <section className="py-24 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 mb-6">
               Our Values
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -193,7 +220,7 @@ const About: React.FC = () => {
                 <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                   <value.icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 mb-4">
                   {value.title}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
@@ -204,49 +231,59 @@ const About: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <RouteMap />
+
       {/* Leadership Team */}
       <section className="py-24 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Leadership Team</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 mb-4">Our Leadership Team</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Meet the dedicated professionals guiding our organization.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {aboutData?.directors && aboutData.directors.length > 0 ? (
-              aboutData.directors.map((director, index) => (
-                <motion.div
-                  key={director._id || index}
-                  initial={{ opacity: 0, y: 20 }}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {LEADERSHIP_TEAM.map((member, index) => {
+              const isFeatured = member.variant === 'featured';
+              return (
+                <motion.article
+                  key={member.id}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.45, delay: index * 0.08 }}
                   viewport={{ once: true }}
-                  className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  className={`flex min-h-[140px] flex-col justify-center rounded-xl border p-6 shadow-md transition-shadow duration-300 hover:shadow-lg sm:p-7 ${
+                    isFeatured
+                      ? 'border-slate-600/80 bg-slate-800 text-white dark:border-slate-500 dark:bg-slate-800'
+                      : 'border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800'
+                  }`}
                 >
-                  <div className="h-64 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                    {director.image ? (
-                      <img 
-                        src={director.image} 
-                        alt={director.name}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-gray-400 dark:text-gray-500 text-lg">Photo Coming Soon</span>
-                    )}
-                  </div>
-                  <div className="p-8 text-center">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{director.name}</h3>
-                    <p className="text-gray-600 dark:text-gray-300">{director.designation}</p>
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              <div className="col-span-3 text-center py-16">
-                <p className="text-gray-500 text-lg">Our leadership team information will be available soon.</p>
-              </div>
-            )}
+                  <h3
+                    className={`text-lg font-semibold leading-snug sm:text-xl ${
+                      isFeatured ? 'text-white' : 'text-gray-900 dark:text-white'
+                    }`}
+                  >
+                    {member.title}
+                  </h3>
+                  <p
+                    className={`mt-2 text-base font-medium sm:text-[1.05rem] ${
+                      isFeatured ? 'text-cyan-400' : 'text-cyan-600 dark:text-cyan-400'
+                    }`}
+                  >
+                    {member.accent}
+                  </p>
+                  <p
+                    className={`mt-3 text-sm leading-relaxed sm:text-[0.9375rem] ${
+                      isFeatured ? 'text-slate-300' : 'text-gray-600 dark:text-gray-300'
+                    }`}
+                  >
+                    {member.description}
+                  </p>
+                </motion.article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -307,7 +344,7 @@ const About: React.FC = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Join Our Team</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-blue-100 to-purple-200 mb-6">Join Our Team</h2>
           <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
             We're always looking for talented, passionate individuals to join our growing team. Explore career opportunities at VisionAI.
           </p>

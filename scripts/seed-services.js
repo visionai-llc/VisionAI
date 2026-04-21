@@ -118,6 +118,108 @@ const servicesData = [
     ],
     order: 6,
     icon: 'Zap'
+  },
+  {
+    title: 'Mainframe modernization',
+    description:
+      "We translate Japan's most critical legacy systems — COBOL, JCL, and Fujitsu mainframes — into modern, maintainable architectures without disrupting live operations. Our engineers have hands-on mainframe experience and the Japanese language skills to work directly with your teams.",
+    pricing: 'Custom Pricing',
+    status: 'ACTIVE',
+    featured: false,
+    slug: 'mainframe-modernization',
+    category: 'Mainframe',
+    features: [
+      'Legacy code analysis, conversion, and documentation in English and Japanese',
+      'Zero-downtime migration strategies for mission-critical banking and insurance systems',
+      'End-to-end delivery responsibility — not just consulting advice'
+    ],
+    order: 7,
+    icon: 'Server'
+  },
+  {
+    title: 'Business requirement engineering',
+    description:
+      'Getting requirements right is the hardest part of any project. Our BRE practice works both directions — backward (reverse-engineering requirements from existing systems) and forward (defining requirements for new capabilities) — so nothing falls through the gaps.',
+    pricing: 'Custom Pricing',
+    status: 'ACTIVE',
+    featured: false,
+    slug: 'business-requirement-engineering',
+    category: 'Requirements',
+    features: [
+      'Backward BRE: extract and document requirements from undocumented legacy systems',
+      'Forward BRE: structured elicitation, gap analysis, and requirement traceability matrices',
+      'Bilingual documentation for seamless handoff between Japan and global teams'
+    ],
+    order: 8,
+    icon: 'FileText'
+  },
+  {
+    title: 'Techno-business rationalization',
+    description:
+      'Many enterprises carry IT portfolios filled with overlapping, underused, or misaligned systems. We cut through the complexity — mapping your technology landscape to real business outcomes and identifying where to invest, consolidate, or retire.',
+    pricing: 'Custom Pricing',
+    status: 'ACTIVE',
+    featured: false,
+    slug: 'techno-business-rationalization',
+    category: 'Strategy',
+    features: [
+      'Application portfolio assessment: value mapping, redundancy identification, and prioritization',
+      'Cost-benefit analysis and business case development for rationalization decisions',
+      'Roadmap to a leaner, higher-performing technology estate'
+    ],
+    order: 9,
+    icon: 'PieChart'
+  },
+  {
+    title: 'System development',
+    description:
+      'We build enterprise systems from the ground up — or extend and integrate what you already have. Our development teams work on-site or remotely, embedded with your stakeholders, with Vision AI holding full accountability for delivery quality and timelines.',
+    pricing: 'Custom Pricing',
+    status: 'ACTIVE',
+    featured: false,
+    slug: 'system-development',
+    category: 'Development',
+    features: [
+      'Custom application development across Java, Python, cloud-native, and modern web stacks',
+      'Legacy system integration: APIs, middleware, and data migration',
+      'Agile delivery with bilingual sprint reviews, documentation, and stakeholder reporting'
+    ],
+    order: 11,
+    icon: 'Code2'
+  },
+  {
+    title: 'Program management',
+    description:
+      'Large transformation programs fail not from lack of talent, but lack of coordination. Our program managers bring structure, visibility, and accountability to complex, multi-workstream IT programs — bridging the communication gap between Japanese executives and engineering teams.',
+    pricing: 'Custom Pricing',
+    status: 'ACTIVE',
+    featured: false,
+    slug: 'program-management',
+    category: 'Program Management',
+    features: [
+      'Program governance frameworks: steering committees, RAID logs, and milestone tracking',
+      'Bilingual status reporting and executive dashboard management',
+      'Vendor coordination, budget oversight, and schedule risk management'
+    ],
+    order: 12,
+    icon: 'Kanban'
+  },
+  {
+    title: 'Business analysts',
+    description:
+      'Our business analysts sit at the intersection of your business and your technology teams. Bilingual and domain-trained, they translate business intent into precise technical specifications — and keep both sides aligned throughout delivery.',
+    pricing: 'Custom Pricing',
+    status: 'ACTIVE',
+    featured: false,
+    slug: 'business-analysts',
+    category: 'Consulting',
+    features: [
+      'Stakeholder workshops, process mapping, and as-is / to-be analysis',
+      'User stories, use cases, and functional specifications in English and Japanese',
+      'UAT planning, test scenario design, and sign-off facilitation'
+    ],
+    order: 13,
+    icon: 'Users'
   }
 ];
 

@@ -132,46 +132,25 @@ const seedData = async () => {
     // Create sample about data
     const aboutData = {
       companyInfo: {
-        mission: 'To revolutionize businesses through cutting-edge AI solutions that drive growth and innovation.',
-        vision: 'To be the global leader in AI-powered business transformation, empowering organizations to reach their full potential.',
-        description: 'VisionAI is a leading provider of artificial intelligence solutions, helping businesses leverage the power of AI to transform their operations, drive efficiency, and achieve unprecedented growth.',
-        foundedYear: 2020,
-        teamSize: '50+',
-        headquarters: 'San Francisco, CA'
+        mission: 'To support enterprise modernization with practical, bilingual delivery and AI-enabled engineering workflows.',
+        vision: 'To be a trusted Japan-focused partner for legacy modernization and technology transformation.',
+        description: 'Vision AI (visionai.jp) is an independent company providing modernization, engineering, and delivery support services for enterprise technology programs.',
+        foundedYear: 2025,
+        teamSize: 'Small specialist team',
+        headquarters: 'Tsukuba, Ibaraki, Japan'
       },
       contactInfo: {
-        email: 'contact@visionai.com',
-        phone: '+1 (555) 123-4567',
-        address: '123 AI Street, San Francisco, CA 94105',
-        mapUrl: 'https://maps.google.com/?q=San+Francisco+CA'
+        email: 'sales@visionai.jp',
+        phone: '+81-50-8894-4567',
+        address: '305-0861, Ibaraki, Tsukuba, Yatabe 1077-58',
+        mapUrl: 'https://maps.google.com/?q=Tsukuba+Ibaraki+Japan'
       },
-      directors: [
-        {
-          name: 'Dr. Emily Rodriguez',
-          designation: 'CEO & Founder',
-          bio: 'Dr. Rodriguez is a pioneer in AI research with over 15 years of experience in machine learning and neural networks.',
-          image: 'https://picsum.photos/seed/emily/200/200.jpg',
-          linkedin: 'https://linkedin.com/in/emilyrodriguez',
-          email: 'emily@visionai.com',
-          order: 1,
-          isActive: true
-        },
-        {
-          name: 'James Chen',
-          designation: 'CTO',
-          bio: 'James leads our technical vision with extensive experience in scalable AI systems and cloud architecture.',
-          image: 'https://picsum.photos/seed/james/200/200.jpg',
-          linkedin: 'https://linkedin.com/in/jameschen',
-          email: 'james@visionai.com',
-          order: 2,
-          isActive: true
-        }
-      ],
+      directors: [],
       stats: {
-        projectsCompleted: 150,
-        clientsServed: 75,
-        yearsExperience: 4,
-        teamMembers: 50
+        projectsCompleted: 0,
+        clientsServed: 0,
+        yearsExperience: 1,
+        teamMembers: 0
       }
     };
 

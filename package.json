@@ -3,14 +3,26 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "imports": {
+    "#server/*": "./server/*",
+    "#features/*": "./server/features/*",
+    "#shared/*": "./server/shared/*",
+    "#config/*": "./server/config/*"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node server/index.js",
+    "start": "node server/main.js",
     "vercel-build": "npm run build",
     "create-admin": "node server/scripts/createAdmin.js",
-    "seed-data": "node server/scripts/seedData.js"
+    "seed-data": "node server/scripts/seed/seedAll.js",
+    "seed:admin": "node server/scripts/seed/seedAdmin.js",
+    "seed:about": "node server/scripts/seed/seedAbout.js",
+    "seed:services": "node server/scripts/seed/seedServices.js",
+    "seed:jobs": "node server/scripts/seed/seedJobs.js",
+    "seed:contacts": "node server/scripts/seed/seedContacts.js",
+    "seed:applications": "node server/scripts/seed/seedApplications.js"
   },
   "engines": {
     "node": ">=18.0.0"

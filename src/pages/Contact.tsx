@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 interface ContactForm {
   name: string;
@@ -20,10 +21,17 @@ interface AboutData {
   contactInfo: ContactInfo;
 }
 
+const DEFAULT_CONTACT_INFO: ContactInfo = {
+  email: 'sales@visionai.jp',
+  phone: '+81-50-8894-4567',
+  address: '305-0861, Ibaraki, Tsukuba, Yatabe 1077-58',
+  mapUrl: 'https://maps.google.com/?q=Tsukuba+Ibaraki+Japan',
+};
+
 const Contact: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [contactData, setContactData] = useState<ContactInfo | null>(null);
+  const [contactData, setContactData] = useState<ContactInfo>(DEFAULT_CONTACT_INFO);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactForm>();
 
   useEffect(() => {
@@ -32,14 +40,18 @@ const Contact: React.FC = () => {
 
   const fetchContactData = async () => {
     try {
-      const response = await fetch('/api/about');
+      const response = await fetchWithTimeout('/api/about');
       if (response.ok) {
         const data: AboutData = await response.json();
-        setContactData(data.contactInfo);
+        if (data?.contactInfo?.address && data?.contactInfo?.phone && data?.contactInfo?.email) {
+          setContactData(data.contactInfo);
+          return;
+        }
       }
     } catch (error) {
       console.error('Error fetching contact data:', error);
     }
+    setContactData(DEFAULT_CONTACT_INFO);
   };
 
   const onSubmit = async (data: ContactForm) => {
@@ -117,9 +129,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Vision AI Location</h3>
-                    <p className="text-gray-600 dark:text-gray-300">
-                      {contactData?.address || 'Loading...'}
-                    </p>
+                    <p className="text-gray-600 dark:text-gray-300">{contactData.address}</p>
                   </div> 
                 </div>
                 <div className="flex items-center">
@@ -128,7 +138,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Telephone</h3>
-                    <p className="text-gray-600 dark:text-gray-300">{contactData?.phone || 'Loading...'}</p>
+                    <p className="text-gray-600 dark:text-gray-300">{contactData.phone}</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -137,7 +147,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Email</h3>
-                    <p className="text-gray-600 dark:text-gray-300">{contactData?.email || 'Loading...'}</p>
+                    <p className="text-gray-600 dark:text-gray-300">{contactData.email}</p>
                   </div>
                 </div>
               </div>
@@ -263,7 +273,7 @@ const Contact: React.FC = () => {
                   <MapPin className="h-5 w-5 mr-3 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
                   <div>
                     <div className="font-semibold">Vision AI Location</div>
-                    <div>{contactData?.address || 'Loading...'}</div>
+                    <div>{contactData.address}</div>
                   </div>
                 </div>
                 <div>
@@ -281,7 +291,7 @@ const Contact: React.FC = () => {
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(contactData?.address || '305-0861, Ibaraki, Tsukuba, Yatabe 1077-58, Japan')}&output=embed`}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(contactData.address)}&output=embed`}
                   />
                 </div>
           </div>

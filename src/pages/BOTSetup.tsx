@@ -12,13 +12,13 @@ const BOTSetup: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-teal-600 via-blue-500 to-indigo-600 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 py-24">
-        <img src="/Bot.png" alt="BOT Setup (Build-Operate-Transfer)" className="absolute inset-0 w-full h-full object-cover opacity-75 brightness-110 z-0" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-500 to-purple-600 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 py-24">
+        <img src="/BOT.jpg" alt="BOT Setup (Build-Operate-Transfer)" className="absolute inset-0 w-full h-full object-cover opacity-75 brightness-110 z-0" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/70 z-10" />
         <div className="relative z-20 w-full flex flex-col items-center justify-center text-center max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 drop-shadow-lg mb-5">BOT Setup (Build-Operate-Transfer)</h1>
           <p className="text-xl md:text-2xl text-white/90 mb-5 font-medium max-w-2xl mx-auto">Our BOT Setup service provides a turnkey model to establish offshore delivery centers tailored for scalability, cost efficiency, and long-term control. This model ensures your organization gains both operational efficiency and strategic ownership.</p>
-          <button onClick={() => handleNavigate('/contact')} className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-teal-500 to-blue-500 text-white font-bold rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all duration-200 shadow-lg text-base mt-4">Get Started</button>
+          <button onClick={() => handleNavigate('/contact')} className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold rounded-lg hover:from-indigo-600 hover:to-blue-600 transition-all duration-200 shadow-lg text-base mt-4">Get Started</button>
         </div>
       </section>
 

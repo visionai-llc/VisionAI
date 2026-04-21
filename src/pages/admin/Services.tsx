@@ -11,6 +11,7 @@ import {
   Search,
   X
 } from 'lucide-react';
+import { toTitleCase } from '../../utils/toTitleCase';
 
 interface Service {
   _id: string;
@@ -272,7 +273,7 @@ const Services: React.FC = () => {
                     <tr key={service._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">{service.title}</div>
+                          <div className="text-sm font-medium text-gray-900">{toTitleCase(service.title)}</div>
                           <div className="text-sm text-gray-500 truncate max-w-xs">{service.description}</div>
                         </div>
                       </td>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, ChevronRight, MapPin, Phone, Mail, Briefcase } from 'lucide-react';
+import { X, Send, ChevronRight, MapPin, Phone, Mail } from 'lucide-react';
 import BackgroundVideo from './BackgroundVideo';
 
 interface ChatMessage {
@@ -89,6 +89,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ onNavigate }) => {
                     text: 'Hello 👋\nWelcome to VisionAI.\nHow can I help you today?',
                     options: [
                         { label: 'Our Services', action: 'services' },
+                        { label: 'AI Products', action: 'ai_products' },
                         { label: 'Contact Us', action: 'contact' },
                         { label: 'Careers', action: 'careers' },
                         { label: 'About VisionAI', action: 'about' }
@@ -164,6 +165,17 @@ const ChatBot: React.FC<ChatBotProps> = ({ onNavigate }) => {
                         ]
                     };
                     break;
+                case 'ai_products':
+                    response = {
+                        id: Date.now().toString(),
+                        sender: 'bot',
+                        text: 'Our AI products include:\n\n• KaizenDhara\n• Test Case Generator\n• Test Executor\n\nWould you like to navigate to the AI Products page?',
+                        options: [
+                            { label: 'Go to AI Products Page', action: 'navigate_ai_products' },
+                            { label: 'Back to Menu', action: 'menu' }
+                        ]
+                    };
+                    break;
                 case 'careers':
                     const jobsList = jobs.length > 0 
                         ? jobs.map(job => `• ${job.role} - ${job.location} (${job.type})`).join('\n')
@@ -186,7 +198,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ onNavigate }) => {
                         sender: 'bot',
                         text: aboutData?.companyInfo 
                             ? `VisionAI is ${aboutData.companyInfo.description.toLowerCase()}\n\nWould you like to learn more about us?`
-                            : 'VisionAI is a leading AI solutions provider specializing in cutting-edge artificial intelligence and machine learning technologies. Would you like to learn more about us?',
+                            : 'VisionAI is a Japan-focused IT services and consulting company supporting modernization and delivery programs. Would you like to learn more about us?',
                         options: [
                             { label: 'Go to About Page', action: 'navigate_about' },
                             { label: 'Our Mission', action: 'about_mission' },
@@ -267,6 +279,17 @@ const ChatBot: React.FC<ChatBotProps> = ({ onNavigate }) => {
                         ]
                     };
                     break;
+                case 'navigate_ai_products':
+                    onNavigate('ai-products');
+                    response = {
+                        id: Date.now().toString(),
+                        sender: 'bot',
+                        text: 'Navigating to AI Products page...',
+                        options: [
+                            { label: 'Back to Menu', action: 'menu' }
+                        ]
+                    };
+                    break;
                 case 'menu':
                     response = {
                         id: Date.now().toString(),
@@ -274,6 +297,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ onNavigate }) => {
                         text: 'How else can I assist you?',
                         options: [
                             { label: 'Our Services', action: 'services' },
+                            { label: 'AI Products', action: 'ai_products' },
                             { label: 'Contact Us', action: 'contact' },
                             { label: 'Careers', action: 'careers' },
                             { label: 'About VisionAI', action: 'about' }
@@ -287,6 +311,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ onNavigate }) => {
                         text: 'I can help you navigate our site. Please choose an option below.',
                         options: [
                             { label: 'Our Services', action: 'services' },
+                            { label: 'AI Products', action: 'ai_products' },
                             { label: 'Contact Us', action: 'contact' },
                             { label: 'Careers', action: 'careers' },
                             { label: 'About VisionAI', action: 'about' }
@@ -329,7 +354,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ onNavigate }) => {
             return {
                 id: Date.now().toString(),
                 sender: 'bot',
-                text: 'VisionAI is a leading AI solutions provider specializing in cutting-edge artificial intelligence and machine learning technologies.',
+                text: 'VisionAI is a Japan-focused IT services and consulting company supporting modernization and delivery programs.',
                 options: [{ label: 'Learn More', action: 'about' }]
             };
         }

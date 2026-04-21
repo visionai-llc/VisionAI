@@ -6,56 +6,25 @@ dotenv.config();
 
 const aboutData = {
   companyInfo: {
-    mission: 'To lead in technological innovation and set new industry standards by empowering Japan\'s digital transformation through scalable, AI-driven solutions and strategic global collaboration.',
-    vision: 'To be the global leader in AI-powered business transformation, creating a world where intelligent systems and human expertise work together to solve the most complex challenges.',
-    description: 'We are pioneering the future of business intelligence through advanced AI solutions. Our mission is to make artificial intelligence accessible, practical, and transformative for businesses of all sizes',
-    foundedYear: 2020,
-    teamSize: '50-100',
-    headquarters: 'Tokyo, Japan'
+    mission: 'To support enterprise modernization with practical, bilingual delivery and AI-enabled engineering workflows.',
+    vision: 'To be a trusted Japan-focused partner for legacy modernization and technology transformation.',
+    description: 'Vision AI provides modernization, engineering, and delivery support services for enterprise technology programs.',
+    foundedYear: 2025,
+    teamSize: 'Small specialist team',
+    headquarters: 'Tsukuba, Ibaraki, Japan'
   },
   contactInfo: {
-    email: 'contact@visionai.jp',
-    phone: '+81-3-1234-5678',
-    address: 'Tokyo, Japan',
-    mapUrl: 'https://maps.google.com/?q=Tokyo,Japan'
+    email: 'sales@visionai.jp',
+    phone: '+81-50-8894-4567',
+    address: '305-0861, Ibaraki, Tsukuba, Yatabe 1077-58',
+    mapUrl: 'https://maps.google.com/?q=Tsukuba+Ibaraki+Japan'
   },
-  directors: [
-    {
-      name: 'John Smith',
-      designation: 'CEO & Founder',
-      bio: 'John is a visionary leader with over 15 years of experience in AI and machine learning. He founded VisionAI with the mission to make AI accessible to all businesses.',
-      image: '/team/john-smith.jpg',
-      linkedin: 'https://linkedin.com/in/johnsmith',
-      email: 'john.smith@visionai.jp',
-      order: 1,
-      isActive: true
-    },
-    {
-      name: 'Sarah Johnson',
-      designation: 'CTO',
-      bio: 'Sarah is a technology expert with extensive experience in developing scalable AI solutions. She leads our technical team and ensures we deliver cutting-edge solutions.',
-      image: '/team/sarah-johnson.jpg',
-      linkedin: 'https://linkedin.com/in/sarahjohnson',
-      email: 'sarah.johnson@visionai.jp',
-      order: 2,
-      isActive: true
-    },
-    {
-      name: 'Michael Chen',
-      designation: 'Head of Operations',
-      bio: 'Michael oversees our global operations and ensures smooth delivery of projects to clients worldwide. He brings operational excellence to everything we do.',
-      image: '/team/michael-chen.jpg',
-      linkedin: 'https://linkedin.com/in/michaelchen',
-      email: 'michael.chen@visionai.jp',
-      order: 3,
-      isActive: true
-    }
-  ],
+  directors: [],
   stats: {
-    projectsCompleted: 150,
-    clientsServed: 75,
-    yearsExperience: 4,
-    teamMembers: 65
+    projectsCompleted: 0,
+    clientsServed: 0,
+    yearsExperience: 1,
+    teamMembers: 0
   }
 };
 

@@ -8,17 +8,28 @@ import PageTransitionWrapper from './components/PageTransitionWrapper';
 
 
 // Route-based lazy loaded pages
-const Home = React.lazy(() => import('./pages/Home'));
-const About = React.lazy(() => import('./pages/About'));
-const Services = React.lazy(() => import('./pages/Services'));
+const Home = React.lazy(() => import('@features/home/pages/Home'));
+const About = React.lazy(() => import('@features/about/pages/About'));
+const Services = React.lazy(() => import('@features/services/pages/Services'));
 const EndToEndSolutionImplementation = React.lazy(() => import('./pages/EndToEndSolutionImplementation'));
 const AIPoweredBusinessIntelligence = React.lazy(() => import('./pages/AIPoweredBusinessIntelligence'));
 const AgenticAISystems = React.lazy(() => import('./pages/AgenticAISystems'));
 const DataDrivenAnalytics = React.lazy(() => import('./pages/DataDrivenAnalytics'));
 const BOTSetup = React.lazy(() => import('./pages/BOTSetup'));
 const LegacyToFutureTransformation = React.lazy(() => import('./pages/LegacyToFutureTransformation'));
-const Careers = React.lazy(() => import('./pages/Careers'));
-const Contact = React.lazy(() => import('./pages/Contact'));
+const MainframeModernization = React.lazy(() => import('./pages/MainframeModernization'));
+const BusinessRequirementEngineering = React.lazy(() => import('./pages/BusinessRequirementEngineering'));
+const TechnoBusinessRationalization = React.lazy(() => import('./pages/TechnoBusinessRationalization'));
+const SystemDevelopment = React.lazy(() => import('./pages/SystemDevelopment'));
+const ProgramManagement = React.lazy(() => import('./pages/ProgramManagement'));
+const BusinessAnalysts = React.lazy(() => import('./pages/BusinessAnalysts'));
+const AIProducts = React.lazy(() => import('@features/products/pages/AIProducts'));
+const KaizenDhara = React.lazy(() => import('./pages/products/KaizenDhara'));
+const TestCaseGenerator = React.lazy(() => import('./pages/products/TestCaseGenerator'));
+const TestExecutor = React.lazy(() => import('./pages/products/TestExecutor'));
+const DataMigration = React.lazy(() => import('./pages/products/DataMigration'));
+const Careers = React.lazy(() => import('@features/careers/pages/Careers'));
+const Contact = React.lazy(() => import('@features/contact/pages/Contact'));
 
 // Admin pages
 const Login = React.lazy(() => import('./pages/Login'));
@@ -73,6 +84,17 @@ function App() {
                 <Route path="/services/data-driven-analytics" element={<PageTransitionWrapper><DataDrivenAnalytics /></PageTransitionWrapper>} />
                 <Route path="/services/bot-setup" element={<PageTransitionWrapper><BOTSetup /></PageTransitionWrapper>} />
                 <Route path="/services/legacy-to-future-transformation" element={<PageTransitionWrapper><LegacyToFutureTransformation /></PageTransitionWrapper>} />
+                <Route path="/services/mainframe-modernization" element={<PageTransitionWrapper><MainframeModernization /></PageTransitionWrapper>} />
+                <Route path="/services/business-requirement-engineering" element={<PageTransitionWrapper><BusinessRequirementEngineering /></PageTransitionWrapper>} />
+                <Route path="/services/techno-business-rationalization" element={<PageTransitionWrapper><TechnoBusinessRationalization /></PageTransitionWrapper>} />
+                <Route path="/services/system-development" element={<PageTransitionWrapper><SystemDevelopment /></PageTransitionWrapper>} />
+                <Route path="/services/program-management" element={<PageTransitionWrapper><ProgramManagement /></PageTransitionWrapper>} />
+                <Route path="/services/business-analysts" element={<PageTransitionWrapper><BusinessAnalysts /></PageTransitionWrapper>} />
+                <Route path="ai-products" element={<PageTransitionWrapper><AIProducts /></PageTransitionWrapper>} />
+                <Route path="/ai-products/kaizendhara" element={<PageTransitionWrapper><KaizenDhara /></PageTransitionWrapper>} />
+                <Route path="/ai-products/test-case-generator" element={<PageTransitionWrapper><TestCaseGenerator /></PageTransitionWrapper>} />
+                <Route path="/ai-products/test-executor" element={<PageTransitionWrapper><TestExecutor /></PageTransitionWrapper>} />
+                <Route path="/ai-products/data-migration" element={<PageTransitionWrapper><DataMigration /></PageTransitionWrapper>} />
                 <Route path="careers" element={<PageTransitionWrapper><Careers /></PageTransitionWrapper>} />
                 <Route path="contact" element={<PageTransitionWrapper><Contact /></PageTransitionWrapper>} />
                 {/* <Route path="blog" element={<Blog />} /> */}

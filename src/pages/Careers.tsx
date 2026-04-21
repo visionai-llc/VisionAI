@@ -1,6 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { MapPin, Clock, DollarSign, Users, Upload, CheckCircle, ChevronDown, Briefcase, Cpu } from 'lucide-react';
+import {
+  MapPin,
+  Clock,
+  DollarSign,
+  Users,
+  Upload,
+  CheckCircle,
+  ChevronDown,
+  Briefcase,
+  Cpu,
+  GraduationCap,
+} from 'lucide-react';
+import { FALLBACK_JOBS, sortJobsByOrder } from '../data/fallbackJobs';
+import { INTERNSHIPS, internshipApplyLabel } from '../data/internships';
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 interface ApplicationForm {
   name: string;
@@ -29,7 +43,11 @@ interface Job {
   order: number;
 }
 
-const HeroVideos: React.FC = () => {
+interface HeroVideosProps {
+  onViewPositions?: () => void;
+}
+
+const HeroVideos: React.FC<HeroVideosProps> = ({ onViewPositions }) => {
   const heroVideos = ['/careers.mov'];
   const [current, setCurrent] = useState(0);
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -69,9 +87,13 @@ const HeroVideos: React.FC = () => {
               Be part of a revolutionary team shaping the future of AI. We're looking for
               passionate individuals to help transform businesses worldwide.
             </p>
-            <a href="#open-roles" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-3d-hover pointer-events-auto">
-              View Open Roles
-            </a>
+            <button
+              type="button"
+              onClick={onViewPositions}
+              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-3d-hover pointer-events-auto"
+            >
+              View Positions
+            </button>
           </div>
         </div>
       </div>
@@ -79,31 +101,66 @@ const HeroVideos: React.FC = () => {
   );
 };
 
+type CareerTab = 'positions' | 'internships';
+
 const Careers: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [expandedJobIndex, setExpandedJobIndex] = useState<number | null>(null);
+  const [expandedInternIndex, setExpandedInternIndex] = useState<number | null>(null);
+  const [careerTab, setCareerTab] = useState<CareerTab>('positions');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<ApplicationForm>();
+  const opportunitiesRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     fetchJobs();
   }, []);
 
+  const scrollToOpportunities = () => {
+    window.setTimeout(() => {
+      opportunitiesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
+  };
+
+  useEffect(() => {
+    const applyHash = () => {
+      const h = window.location.hash;
+      if (h === '#internships') setCareerTab('internships');
+      else if (h === '#open-roles' || h === '#positions') setCareerTab('positions');
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, []);
+
+  useEffect(() => {
+    setExpandedJobIndex(null);
+    setExpandedInternIndex(null);
+  }, [careerTab]);
+
   const fetchJobs = async () => {
+    let next: Job[] = [];
     try {
-      const response = await fetch('/api/jobs?status=OPEN');
+      const response = await fetchWithTimeout('/api/jobs?status=OPEN');
       if (response.ok) {
         const data = await response.json();
-        setJobs(data);
+        if (Array.isArray(data) && data.length > 0) {
+          next = data;
+        }
       }
     } catch (error) {
       console.error('Error fetching jobs:', error);
-    } finally {
-      setLoading(false);
     }
+    if (next.length === 0) {
+      next = sortJobsByOrder(FALLBACK_JOBS) as Job[];
+    } else {
+      next = sortJobsByOrder(next);
+    }
+    setJobs(next);
+    setLoading(false);
   };
 
   const getIconComponent = (department: string) => {
@@ -158,7 +215,12 @@ const Careers: React.FC = () => {
 
   return (
     <div>
-      <HeroVideos />
+      <HeroVideos
+        onViewPositions={() => {
+          setCareerTab('positions');
+          scrollToOpportunities();
+        }}
+      />
 
       {/* Why Work With Us */}
       <section className="py-24 bg-white dark:bg-gray-900">
@@ -206,90 +268,244 @@ const Careers: React.FC = () => {
         </div>
       </section>
 
-      {/* Job Listings */}
-      <section id="open-roles" className="py-24 bg-gray-50 dark:bg-gray-800">
+      {/* Open Positions & Internships (tabbed) */}
+      <section
+        ref={opportunitiesRef}
+        id="careers-opportunities"
+        className="py-24 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+        aria-label="Career opportunities"
+      >
+        <span id="open-roles" className="sr-only" aria-hidden />
+        <span id="internships" className="sr-only" aria-hidden />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Open Positions
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Join VisionAI
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Find your next opportunity to make a difference.
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+              {careerTab === 'positions'
+                ? 'Full-time roles across our teams.'
+                : 'Internships in Tokyo and remote — hands-on experience with real client work.'}
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
-            {jobs.map((job, index) => {
-              const isOpen = expandedIndex === index;
-              return (
-                <div key={index} className={`bg-white dark:bg-gray-900 rounded-2xl shadow border ${isOpen ? 'border-blue-300 dark:border-blue-700' : 'border-gray-200 dark:border-gray-700'}`}>
-                  <button
-                    onClick={() => setExpandedIndex(isOpen ? null : index)}
-                    className="w-full text-left p-6 flex items-start justify-between gap-4"
-                    aria-expanded={isOpen}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="h-14 w-14 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 flex items-center justify-center">
-                        {(() => {
-                          const IconComponent = getIconComponent(job.department);
-                          return <IconComponent className="h-8 w-8" />;
-                        })()}
-                      </div>
-                      <div>
-                        <div className="inline-flex items-center gap-2 mb-1">
-                          <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">{job.department}</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{job.role}</h3>
-                        <div className="mt-2 flex items-center flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
-                          <span className="inline-flex items-center"><MapPin className="h-4 w-4 mr-1" />{job.location}</span>
-                          <span className="inline-flex items-center"><Clock className="h-4 w-4 mr-1" />{job.type.replace('_', ' ')}</span>
-                          <span className="inline-flex items-center"><DollarSign className="h-4 w-4 mr-1" />{job.salary}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <ChevronDown className={`h-5 w-5 mt-2 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {isOpen && (
-                    <div className="px-6 pb-6 pt-0 border-t border-gray-200 dark:border-gray-700">
-                      <p className="text-gray-700 dark:text-gray-300 mb-4">{job.description}</p>
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Requirements</h4>
-                      <ul className="space-y-1 mb-6">
-                        {job.requirements.map((req, i) => (
-                          <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-start">
-                            <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                            {req}
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        onClick={() => {
-                          setValue('position', job.role);
-                          setIsModalOpen(true);
-                        }}
-                        className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        Apply for this role
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+
+            <div
+              className="grid grid-cols-2 gap-3 max-w-xl mx-auto"
+              role="tablist"
+              aria-label="Choose role type"
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={careerTab === 'positions'}
+                id="tab-positions"
+                aria-controls="panel-positions"
+                onClick={() => setCareerTab('positions')}
+                className={`py-4 px-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-200 border-2 ${
+                  careerTab === 'positions'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
+                    : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500'
+                }`}
+              >
+                Open Positions
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={careerTab === 'internships'}
+                id="tab-internships"
+                aria-controls="panel-internships"
+                onClick={() => setCareerTab('internships')}
+                className={`py-4 px-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-200 border-2 ${
+                  careerTab === 'internships'
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg'
+                    : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+                }`}
+              >
+                Internships
+              </button>
+            </div>
           </div>
 
-          {/* Didn't find a match CTA */}
-          <div className="text-center mt-10">
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">Don't see a position that matches your skills?</p>
-            <button
-              onClick={() => {
-                setValue('position', 'General Application');
-                setIsModalOpen(true);
-              }}
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Submit Your Resume
-            </button>
-          </div>
+          {careerTab === 'positions' && (
+            <div id="panel-positions" role="tabpanel" aria-labelledby="tab-positions" className="transition-opacity duration-200">
+              <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
+                {jobs.map((job, index) => {
+                  const isOpen = expandedJobIndex === index;
+                  return (
+                    <div key={index} className={`bg-white dark:bg-gray-900 rounded-2xl shadow border ${isOpen ? 'border-blue-300 dark:border-blue-700' : 'border-gray-200 dark:border-gray-700'}`}>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedJobIndex(isOpen ? null : index)}
+                        className="w-full text-left p-6 flex items-start justify-between gap-4"
+                        aria-expanded={isOpen}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="h-14 w-14 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 flex items-center justify-center shrink-0">
+                            {(() => {
+                              const IconComponent = getIconComponent(job.department);
+                              return <IconComponent className="h-8 w-8" />;
+                            })()}
+                          </div>
+                          <div>
+                            <div className="inline-flex items-center gap-2 mb-1">
+                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">{job.department}</span>
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{job.role}</h3>
+                            <div className="mt-2 flex items-center flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+                              <span className="inline-flex items-center"><MapPin className="h-4 w-4 mr-1" />{job.location}</span>
+                              <span className="inline-flex items-center"><Clock className="h-4 w-4 mr-1" />{job.type.replace('_', ' ')}</span>
+                              <span className="inline-flex items-center">{job.salary}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <ChevronDown className={`h-5 w-5 mt-2 text-gray-500 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      {isOpen && (
+                        <div className="px-6 pb-6 pt-0 border-t border-gray-200 dark:border-gray-700">
+                          <p className="text-gray-700 dark:text-gray-300 mb-4">{job.description}</p>
+                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Requirements</h4>
+                          <ul className="space-y-1 mb-6">
+                            {job.requirements.map((req, i) => (
+                              <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-start">
+                                <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                                {req}
+                              </li>
+                            ))}
+                          </ul>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setValue('position', job.role);
+                              setIsModalOpen(true);
+                            }}
+                            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            Apply for this role
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="text-center mt-10">
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">Don&apos;t see a position that matches your skills?</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setValue('position', 'General Application');
+                    setIsModalOpen(true);
+                  }}
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Submit Your Resume
+                </button>
+              </div>
+            </div>
+          )}
+
+          {careerTab === 'internships' && (
+            <div id="panel-internships" role="tabpanel" aria-labelledby="tab-internships" className="transition-opacity duration-200">
+              <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
+                {INTERNSHIPS.map((intern, index) => {
+                  const isOpen = expandedInternIndex === index;
+                  return (
+                    <div
+                      key={intern.id}
+                      className={`bg-white dark:bg-gray-900 rounded-2xl shadow border ${
+                        isOpen ? 'border-indigo-300 dark:border-indigo-600' : 'border-gray-200 dark:border-gray-700'
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setExpandedInternIndex(isOpen ? null : index)}
+                        className="w-full text-left p-6 flex items-start justify-between gap-4"
+                        aria-expanded={isOpen}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="h-14 w-14 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 flex items-center justify-center shrink-0">
+                            <GraduationCap className="h-8 w-8" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{intern.title}</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{intern.metaLine}</p>
+                            <p className="text-gray-600 dark:text-gray-300 mt-3 italic">{intern.tagline}</p>
+                          </div>
+                        </div>
+                        <ChevronDown
+                          className={`h-5 w-5 mt-2 text-gray-500 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+                      {isOpen && (
+                        <div className="px-6 pb-6 pt-0 border-t border-gray-200 dark:border-gray-700 space-y-6">
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">About the role</h4>
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{intern.aboutTheRole}</p>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">What you will do</h4>
+                            <ul className="space-y-2">
+                              {intern.whatYouWillDo.map((line, i) => (
+                                <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
+                                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2 shrink-0" />
+                                  {line}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">What we are looking for</h4>
+                            <ul className="space-y-2">
+                              {intern.whatWeAreLookingFor.map((line, i) => (
+                                <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
+                                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full mt-2 shrink-0" />
+                                  {line}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Nice to have</h4>
+                            <ul className="space-y-2">
+                              {intern.niceToHave.map((line, i) => (
+                                <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
+                                  <span className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-500 rounded-full mt-2 shrink-0" />
+                                  {line}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setValue('position', internshipApplyLabel(intern.title));
+                              setIsModalOpen(true);
+                            }}
+                            className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors"
+                          >
+                            Apply for this internship
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="text-center mt-10">
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">Questions about internships?</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setValue('position', 'General Application');
+                    setIsModalOpen(true);
+                  }}
+                  className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  Get in touch
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -334,6 +550,11 @@ const Careers: React.FC = () => {
                     <label htmlFor="position" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Position *</label>
                     <select {...register('position', { required: 'Position is required' })} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                       <option value="">Select a position</option>
+                      {INTERNSHIPS.map((intern) => (
+                        <option key={intern.id} value={internshipApplyLabel(intern.title)}>
+                          {internshipApplyLabel(intern.title)}
+                        </option>
+                      ))}
                       {jobs.map((job, index) => (
                         <option key={index} value={job.role}>{job.role}</option>
                       ))}

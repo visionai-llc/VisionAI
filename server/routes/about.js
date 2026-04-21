@@ -13,12 +13,12 @@ router.get('/', async (req, res) => {
       // Create default about info if none exists
       aboutInfo = new About({
         companyInfo: {
-          mission: 'Our mission is to transform businesses through innovative AI solutions.',
-          vision: 'To be the global leader in AI-powered business transformation.',
-          description: 'We are a team of passionate AI experts dedicated to helping businesses leverage the power of artificial intelligence.',
-          foundedYear: 2020,
-          teamSize: '50+',
-          headquarters: 'San Francisco, CA'
+          mission: 'To help enterprises modernize critical systems with practical AI-enabled delivery.',
+          vision: 'To be a trusted bilingual modernization partner for Japan-focused enterprise programs.',
+          description: 'Vision AI (visionai.jp) is an independent IT services and consulting company focused on enterprise transformation and delivery support.',
+          foundedYear: 2025,
+          teamSize: 'Small specialist team',
+          headquarters: 'Tsukuba, Ibaraki, Japan'
         },
         contactInfo: {
           email: 'sales@visionai.jp',
@@ -27,10 +27,10 @@ router.get('/', async (req, res) => {
         },
         directors: [],
         stats: {
-          projectsCompleted: 100,
-          clientsServed: 50,
-          yearsExperience: 4,
-          teamMembers: 50
+          projectsCompleted: 0,
+          clientsServed: 0,
+          yearsExperience: 1,
+          teamMembers: 0
         }
       });
       await aboutInfo.save();

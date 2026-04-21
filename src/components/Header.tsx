@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import { toTitleCase } from '../utils/toTitleCase';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,15 +13,22 @@ const Header: React.FC = () => {
 
   const navItems = [
     { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
+    { path: '/about', label: 'About Us' },
+    { path: '/ai-products', label: 'AI Products' },
     { path: '/careers', label: 'Careers' },
     { path: '/contact', label: 'Contact' },
     // { path: '/blog', label: 'Blog' },
   ];
 
   const servicesItems = [
+    { path: '/services/mainframe-modernization', label: 'AI Led Mainframe Modernization' },
+    { path: '/services/business-requirement-engineering', label: 'Business requirement engineering' },
+    { path: '/services/techno-business-rationalization', label: 'Techno-business rationalization' },
+    { path: '/services/system-development', label: 'System development' },
+    { path: '/services/program-management', label: 'Program management' },
+    { path: '/services/business-analysts', label: 'Business Analytics' },
     { path: '/services/end-to-end-solution-implementation', label: 'End-to-End Solution Implementation' },
-    { path: '/services/ai-powered-business-intelligence', label: 'AI-Powered Business Intelligence' },
+    { path: '/services/ai-powered-business-intelligence', label: 'AI - Powered Business Intelligence' },
     { path: '/services/agentic-ai-systems', label: 'Agentic AI Systems' },
     { path: '/services/data-driven-analytics', label: 'Data-Driven Analytics' },
     { path: '/services/bot-setup', label: 'BOT Setup (Build-Operate-Transfer)' },
@@ -28,32 +36,34 @@ const Header: React.FC = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+  const isNavItemActive = (path: string) =>
+    path === '/ai-products' ? location.pathname.startsWith('/ai-products') : isActive(path);
   const isServicesActive = () => location.pathname.startsWith('/services');
 
   // Timer to handle dropdown close delay
   useEffect(() => {
     let timerId: number | undefined;
-    
+
     if (isServicesDropdownOpen) {
       // Clear any existing timer when dropdown is manually opened
       if (closeTimerRef.current) {
         window.clearTimeout(closeTimerRef.current);
         closeTimerRef.current = null;
       }
-      
+
       // Set a timer to close after 1 minute of inactivity
       timerId = window.setTimeout(() => {
         setIsServicesDropdownOpen(false);
       }, 60000); // 1 minute
-      
+
       closeTimerRef.current = timerId;
-      
+
       return () => {
         if (timerId) window.clearTimeout(timerId);
       };
     }
   }, [isServicesDropdownOpen]);
-  
+
   // Function to handle mouse leave with delay
   const handleMouseLeave = () => {
     // Only set the timer if the dropdown is open
@@ -61,7 +71,7 @@ const Header: React.FC = () => {
       const timerId = window.setTimeout(() => {
         setIsServicesDropdownOpen(false);
       }, 300); // 300ms delay before closing
-      
+
       closeTimerRef.current = timerId;
       return () => {
         if (timerId) window.clearTimeout(timerId);
@@ -83,16 +93,15 @@ const Header: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-sm font-medium transition-all duration-300 ${
-                  isActive(item.path)
+                className={`text-sm font-medium transition-all duration-300 ${isNavItemActive(item.path)
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                }`}
+                  }`}
               >
                 {item.label}
               </Link>
             ))}
-            
+
             {/* Services Dropdown (button also navigates to /services on click) */}
             <div className="relative">
               <button
@@ -108,16 +117,15 @@ const Header: React.FC = () => {
                 onClick={() => { window.dispatchEvent(new Event('force-route-transition')); navigate('/services'); }}
                 aria-haspopup="true"
                 aria-expanded={isServicesDropdownOpen}
-                className={`flex items-center space-x-1 text-sm font-medium transition-all duration-300 ${
-                  isServicesActive()
+                className={`flex items-center space-x-1 text-sm font-medium transition-all duration-300 ${isServicesActive()
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                }`}
+                  }`}
               >
                 <span>Services</span>
                 <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isServicesDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
-              
+
               {isServicesDropdownOpen && (
                 <div
                   onMouseEnter={() => {
@@ -129,24 +137,22 @@ const Header: React.FC = () => {
                     setIsServicesDropdownOpen(true);
                   }}
                   onMouseLeave={handleMouseLeave}
-                  className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2"
+                  className="absolute top-full left-0 mt-1 w-80 max-h-[min(24rem,70vh)] overflow-y-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2"
                 >
                   <div className="space-y-1">
                     {servicesItems.map((item) => (
                       <Link
                         key={item.path}
                         to={item.path}
-                        className={`block px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 ${
-                          isActive(item.path) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                        }`}
+                        className={`block px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 ${isActive(item.path) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                          }`}
                       >
                         <div className="flex flex-col">
-                          <span className={`font-medium text-sm ${
-                            isActive(item.path) 
-                              ? 'text-blue-600 dark:text-blue-400' 
+                          <span className={`font-medium text-sm ${isActive(item.path)
+                              ? 'text-blue-600 dark:text-blue-400'
                               : 'text-gray-900 dark:text-white'
-                          }`}>
-                            {item.label}
+                            }`}>
+                            {toTitleCase(item.label)}
                           </span>
                           {/* Only show name, no description */}
                         </div>
@@ -161,11 +167,10 @@ const Header: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-sm font-medium transition-all duration-300 ${
-                  isActive(item.path)
+                className={`text-sm font-medium transition-all duration-300 ${isActive(item.path)
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                }`}
+                  }`}
               >
                 {item.label}
               </Link>
@@ -199,32 +204,30 @@ const Header: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    isActive(item.path)
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${isNavItemActive(item.path)
                       ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
                       : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </Link>
               ))}
-              
+
               {/* Mobile Services Dropdown */}
               <div className="space-y-2">
                 <button
                   onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    isServicesActive()
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${isServicesActive()
                       ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
                       : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <span>Services</span>
                     <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isServicesDropdownOpen ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
-                
+
                 {isServicesDropdownOpen && (
                   <div className="ml-4 space-y-1">
                     {servicesItems.map((item) => (
@@ -235,13 +238,12 @@ const Header: React.FC = () => {
                           setIsMenuOpen(false);
                           setIsServicesDropdownOpen(false);
                         }}
-                        className={`block px-3 py-2 rounded-lg text-sm transition-all duration-300 ${
-                          isActive(item.path)
+                        className={`block px-3 py-2 rounded-lg text-sm transition-all duration-300 ${isActive(item.path)
                             ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
                             : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-                        }`}
+                          }`}
                       >
-                        {item.label}
+                        {toTitleCase(item.label)}
                       </Link>
                     ))}
                   </div>
@@ -253,16 +255,15 @@ const Header: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    isActive(item.path)
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${isActive(item.path)
                       ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
                       : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </Link>
               ))}
-              
+
               <Link
                 to="/admin"
                 onClick={() => setIsMenuOpen(false)}

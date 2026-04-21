@@ -1,6 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Brain, TrendingUp, Zap } from 'lucide-react';
+import {
+  Brain,
+  TrendingUp,
+  Zap,
+  Server,
+  FileText,
+  PieChart,
+  Cpu,
+  Code2,
+  Kanban,
+  Users,
+} from 'lucide-react';
+import { FALLBACK_SERVICES, sortServicesByOrder } from '../data/fallbackServices';
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
+import { toTitleCase } from '../utils/toTitleCase';
 
 interface ServiceData {
   _id: string;
@@ -47,17 +61,27 @@ const Services: React.FC = () => {
   }, [heroVideos.length]);
 
   const fetchServices = async () => {
+    let next: ServiceData[] = [];
     try {
-      const response = await fetch('/api/services?status=ACTIVE');
+      const response = await fetchWithTimeout('/api/services?status=ACTIVE');
       if (response.ok) {
         const data = await response.json();
-        setServicesData(data);
+        if (Array.isArray(data) && data.length > 0) {
+          next = data;
+        }
       }
     } catch (error) {
       console.error('Error fetching services:', error);
-    } finally {
-      setLoading(false);
     }
+    if (next.length === 0) {
+      next = sortServicesByOrder(FALLBACK_SERVICES) as ServiceData[];
+    } else {
+      next = sortServicesByOrder(next);
+    }
+    // Keep removed service hidden even if old API data still contains it.
+    next = next.filter((service) => service.slug !== 'proprietary-platform');
+    setServicesData(next);
+    setLoading(false);
   };
 
   const handleNavigate = (path: string) => {
@@ -73,6 +97,20 @@ const Services: React.FC = () => {
         return TrendingUp;
       case 'Zap':
         return Zap;
+      case 'Server':
+        return Server;
+      case 'FileText':
+        return FileText;
+      case 'PieChart':
+        return PieChart;
+      case 'Cpu':
+        return Cpu;
+      case 'Code2':
+        return Code2;
+      case 'Kanban':
+        return Kanban;
+      case 'Users':
+        return Users;
       default:
         return Brain; // Default icon
     }
@@ -85,6 +123,13 @@ const Services: React.FC = () => {
       'AI Systems': 'from-green-500 to-green-600',
       'Setup': 'from-teal-500 to-teal-600',
       'Transformation': 'from-cyan-500 to-cyan-600',
+      'Mainframe': 'from-slate-600 to-slate-800',
+      'Requirements': 'from-amber-500 to-orange-600',
+      'Strategy': 'from-emerald-500 to-teal-600',
+      'Platform': 'from-violet-500 to-purple-600',
+      'Development': 'from-indigo-500 to-blue-600',
+      'Program Management': 'from-rose-500 to-red-600',
+      'Consulting': 'from-cyan-500 to-sky-600',
     };
     return colorMap[category] || 'from-blue-500 to-blue-600';
   };
@@ -92,7 +137,7 @@ const Services: React.FC = () => {
   // Transform service data to match ServiceCard component expectations
   const services: Service[] = servicesData.map(service => ({
     icon: getIconComponent(service.icon),
-    title: service.title,
+    title: toTitleCase(service.title),
     description: service.description,
     slug: service.slug,
     features: service.features,
@@ -137,8 +182,8 @@ const Services: React.FC = () => {
                 Our Services
               </h1>
               <p className="text-lg md:text-2xl text-blue-100 leading-relaxed sub-wipe">
-                Comprehensive AI solutions designed to transform your operations, drive growth,
-                and unlock new opportunities in the digital age.
+                From mainframe modernization and bilingual requirements engineering to AI-enabled solutions — comprehensive
+                services designed to transform your operations without disrupting what already works.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                 <button onClick={() => handleNavigate('/contact')} className="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors">Get a Consultation</button>
