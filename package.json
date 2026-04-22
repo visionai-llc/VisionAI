@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:analyze": "vite build --mode analyze",
     "preview": "vite preview",
     "start": "node server/main.js",
     "vercel-build": "npm run build",
@@ -22,7 +23,8 @@
     "seed:services": "node server/scripts/seed/seedServices.js",
     "seed:jobs": "node server/scripts/seed/seedJobs.js",
     "seed:contacts": "node server/scripts/seed/seedContacts.js",
-    "seed:applications": "node server/scripts/seed/seedApplications.js"
+    "seed:applications": "node server/scripts/seed/seedApplications.js",
+    "optimize": "npm run build"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -60,6 +62,7 @@
     "globals": "^17.3.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
+    "terser": "^5.46.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.0"
   }

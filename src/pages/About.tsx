@@ -254,7 +254,7 @@ const About: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: index * 0.08 }}
                   viewport={{ once: true }}
-                  className={`flex min-h-[140px] flex-col justify-center rounded-xl border p-6 shadow-md transition-shadow duration-300 hover:shadow-lg sm:p-7 ${
+                  className={`h-full flex flex-col rounded-xl border p-6 shadow-md transition-shadow duration-300 hover:shadow-lg sm:p-7 ${
                     isFeatured
                       ? 'border-slate-600/80 bg-slate-800 text-white dark:border-slate-500 dark:bg-slate-800'
                       : 'border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800'

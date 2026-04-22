@@ -21,6 +21,7 @@ import { motion } from 'framer-motion';
 import { FALLBACK_SERVICES, sortServicesByOrder } from '../data/fallbackServices';
 import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 import { toTitleCase } from '../utils/toTitleCase';
+import OptimizedImage from '../components/OptimizedImage';
 
 interface Service {
   _id: string;
@@ -239,7 +240,7 @@ const Home: React.FC = () => {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
           />
         </div>
         
@@ -304,7 +305,7 @@ const Home: React.FC = () => {
                 autoPlay
                 muted
                 playsInline
-                preload="auto"
+                preload="metadata"
                 poster="/VisionAILogo.png"
                 controls
                 controlsList="nodownload"
@@ -357,11 +358,11 @@ const Home: React.FC = () => {
                 <div className="pointer-events-none absolute inset-0 blur-2xl bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.28),rgba(99,102,241,0.22)_45%,transparent_75%)]" />
                 <div className="relative w-full max-w-[360px] rounded-2xl p-[2px] bg-gradient-to-br from-cyan-300/55 via-blue-400/30 to-purple-500/45 dark:from-cyan-400/35 dark:via-blue-500/25 dark:to-purple-500/35">
                   <div className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-md">
-                    <img
+                    <OptimizedImage
                       src="/TCG.jpg"
                       alt="Test Case Generator"
-                      className="w-full h-[220px] md:h-[260px] object-cover"
-                      style={{ boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)' }}
+                      className="w-full h-[220px] md:h-[260px]"
+                      priority={false}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-cyan-100/10" />
                   </div>
@@ -508,7 +509,13 @@ const Home: React.FC = () => {
                 className={`relative group bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-3d-hover border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col items-center justify-between reveal reveal-up reveal-delay-${(index % 3) + 1}`}
                 style={{ minHeight: '340px' }}
               >
-                <img src={partner.logo} alt={partner.name} className="mb-6 object-contain" style={{height:'90px', width:'140px'}} />
+                <OptimizedImage 
+                      src={partner.logo} 
+                      alt={partner.name} 
+                      className="mb-6" 
+                      style={{height:'90px', width:'140px', objectFit: 'contain'}}
+                      priority={false}
+                    />
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">{partner.name}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6 text-center">{partner.description}</p>
                 <div className="mt-auto pt-2">

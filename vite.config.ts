@@ -6,10 +6,16 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default defineConfig({
-  base: '/',
-  publicDir: 'public',
-  plugins: [react()],
+export default defineConfig(({ command, mode }) => {
+  const isAnalyze = mode === 'analyze';
+  
+  return {
+    base: '/',
+    publicDir: 'public',
+    plugins: [
+      react(),
+      ...(isAnalyze ? [] : [])
+    ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
@@ -33,13 +39,34 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 700,
+    chunkSizeWarningLimit: 1000,
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
       },
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['framer-motion', 'lucide-react'],
+          charts: ['recharts'],
+        },
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
+          return `js/[name]-[hash].js`;
+        },
+      },
+    },
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
     },
   },
+  };
 });

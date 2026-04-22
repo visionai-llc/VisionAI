@@ -85,7 +85,15 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center space-x-3 group" aria-label="VisionAI home">
             {/* Logo only (no text) - medium size */}
-            <img src="/vision-removebg-preview.png" alt="VisionAI" className="h-20 md:h-32 w-auto" />
+            <img 
+              src="/vision-removebg-preview.png" 
+              alt="VisionAI" 
+              className="h-20 md:h-32 w-auto"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="high"
+              style={{ imageRendering: 'crisp-edges' }}
+            />
           </Link>
 
           <nav className="hidden md:flex space-x-8" role="navigation" aria-label="Main navigation">

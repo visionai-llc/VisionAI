@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import OptimizedImage from '../components/OptimizedImage';
 const LegacyToFutureTransformation: React.FC = () => {
   const navigate = useNavigate();
 
@@ -12,7 +13,13 @@ const LegacyToFutureTransformation: React.FC = () => {
   <div>
     {/* Hero Section */}
   <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-600 via-blue-500 to-indigo-600 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 py-24">
-  <img src="/LFT.jpg" alt="Legacy to Future Transformation" className="absolute inset-0 w-full h-full object-cover opacity-75 brightness-110 z-0" />
+  <OptimizedImage 
+        src="/LFT.jpg" 
+        alt="Legacy to Future Transformation" 
+        className="absolute inset-0 opacity-75 brightness-110 z-0"
+        priority={true}
+        style={{ objectFit: 'cover' }}
+      />
   <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/70 z-10" />
       <div className="relative z-20 w-full flex flex-col items-center justify-center text-center max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 drop-shadow-lg mb-5">Legacy to Future Transformation</h1>

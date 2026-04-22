@@ -33,9 +33,19 @@ type AuthAction =
   | { type: 'UPDATE_PROFILE'; payload: Admin }
   | { type: 'SET_LOADING'; payload: boolean };
 
+const getStoredToken = (): string | null => {
+  const token = localStorage.getItem('adminToken');
+  // Validate token format and prevent invalid values
+  if (!token || token === 'null' || token === 'undefined' || token.length < 10) {
+    localStorage.removeItem('adminToken');
+    return null;
+  }
+  return token;
+};
+
 const initialState: AuthState = {
   admin: null,
-  token: localStorage.getItem('adminToken'),
+  token: getStoredToken(),
   isAuthenticated: false,
   loading: true,
 };
@@ -101,7 +111,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
+    const token = getStoredToken();
     if (token) {
       // Verify token validity by fetching profile
       fetch('/api/admin/profile', {

@@ -1,52 +1,59 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/Layout';
 import RouteTransitionVideo from './components/RouteTransitionVideo';
 import PageTransitionWrapper from './components/PageTransitionWrapper';
+import LoadingSpinner from './components/LoadingSpinner';
 
 
-// Route-based lazy loaded pages
-const Home = React.lazy(() => import('@features/home/pages/Home'));
-const About = React.lazy(() => import('@features/about/pages/About'));
-const Services = React.lazy(() => import('@features/services/pages/Services'));
-const EndToEndSolutionImplementation = React.lazy(() => import('./pages/EndToEndSolutionImplementation'));
-const AIPoweredBusinessIntelligence = React.lazy(() => import('./pages/AIPoweredBusinessIntelligence'));
-const AgenticAISystems = React.lazy(() => import('./pages/AgenticAISystems'));
-const DataDrivenAnalytics = React.lazy(() => import('./pages/DataDrivenAnalytics'));
-const BOTSetup = React.lazy(() => import('./pages/BOTSetup'));
-const LegacyToFutureTransformation = React.lazy(() => import('./pages/LegacyToFutureTransformation'));
-const MainframeModernization = React.lazy(() => import('./pages/MainframeModernization'));
-const BusinessRequirementEngineering = React.lazy(() => import('./pages/BusinessRequirementEngineering'));
-const TechnoBusinessRationalization = React.lazy(() => import('./pages/TechnoBusinessRationalization'));
-const SystemDevelopment = React.lazy(() => import('./pages/SystemDevelopment'));
-const ProgramManagement = React.lazy(() => import('./pages/ProgramManagement'));
-const BusinessAnalysts = React.lazy(() => import('./pages/BusinessAnalysts'));
-const AIProducts = React.lazy(() => import('@features/products/pages/AIProducts'));
-const KaizenDhara = React.lazy(() => import('./pages/products/KaizenDhara'));
-const TestCaseGenerator = React.lazy(() => import('./pages/products/TestCaseGenerator'));
-const TestExecutor = React.lazy(() => import('./pages/products/TestExecutor'));
-const DataMigration = React.lazy(() => import('./pages/products/DataMigration'));
-const Careers = React.lazy(() => import('@features/careers/pages/Careers'));
-const Contact = React.lazy(() => import('@features/contact/pages/Contact'));
+// Route-based lazy loaded pages with prefetch optimization
+const Home = lazy(() => import('@features/home/pages/Home'));
+const About = lazy(() => import('@features/about/pages/About'));
+const Services = lazy(() => import('@features/services/pages/Services'));
+const EndToEndSolutionImplementation = lazy(() => import('./pages/EndToEndSolutionImplementation'));
+const AIPoweredBusinessIntelligence = lazy(() => import('./pages/AIPoweredBusinessIntelligence'));
+const AgenticAISystems = lazy(() => import('./pages/AgenticAISystems'));
+const DataDrivenAnalytics = lazy(() => import('./pages/DataDrivenAnalytics'));
+const BOTSetup = lazy(() => import('./pages/BOTSetup'));
+const LegacyToFutureTransformation = lazy(() => import('./pages/LegacyToFutureTransformation'));
+const MainframeModernization = lazy(() => import('./pages/MainframeModernization'));
+const BusinessRequirementEngineering = lazy(() => import('./pages/BusinessRequirementEngineering'));
+const TechnoBusinessRationalization = lazy(() => import('./pages/TechnoBusinessRationalization'));
+const SystemDevelopment = lazy(() => import('./pages/SystemDevelopment'));
+const ProgramManagement = lazy(() => import('./pages/ProgramManagement'));
+const BusinessAnalysts = lazy(() => import('./pages/BusinessAnalysts'));
+const AIProducts = lazy(() => import('@features/products/pages/AIProducts'));
+const KaizenDhara = lazy(() => import('./pages/products/KaizenDhara'));
+const TestCaseGenerator = lazy(() => import('./pages/products/TestCaseGenerator'));
+const TestExecutor = lazy(() => import('./pages/products/TestExecutor'));
+const DataMigration = lazy(() => import('./pages/products/DataMigration'));
+const Careers = lazy(() => import('@features/careers/pages/Careers'));
+const Contact = lazy(() => import('@features/contact/pages/Contact'));
 
 // Admin pages
-const Login = React.lazy(() => import('./pages/Login'));
-const Dashboard = React.lazy(() => import('./pages/admin/Dashboard.tsx'));
-const AdminServices = React.lazy(() => import('./pages/admin/Services.tsx'));
-const AdminCareers = React.lazy(() => import('./pages/admin/Careers.tsx'));
-const AdminJobApplications = React.lazy(() => import('./pages/admin/JobApplications.tsx'));
-const AdminContacts = React.lazy(() => import('./pages/admin/Contacts.tsx'));
-const AdminAbout = React.lazy(() => import('./pages/admin/About.tsx'));
-const AdminInvoices = React.lazy(() => import('./pages/admin/Invoices.tsx'));
-const AdminProfile = React.lazy(() => import('./pages/admin/Profile.tsx'));
+const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard.tsx'));
+const AdminServices = lazy(() => import('./pages/admin/Services.tsx'));
+const AdminCareers = lazy(() => import('./pages/admin/Careers.tsx'));
+const AdminJobApplications = lazy(() => import('./pages/admin/JobApplications.tsx'));
+const AdminContacts = lazy(() => import('./pages/admin/Contacts.tsx'));
+const AdminAbout = lazy(() => import('./pages/admin/About.tsx'));
+const AdminInvoices = lazy(() => import('./pages/admin/Invoices.tsx'));
+const AdminProfile = lazy(() => import('./pages/admin/Profile.tsx'));
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = localStorage.getItem('adminToken');
   
   if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  // Additional validation: check if token is not empty or invalid
+  if (token === 'null' || token === 'undefined' || token.length < 10) {
+    localStorage.removeItem('adminToken');
     return <Navigate to="/admin/login" replace />;
   }
 
@@ -68,11 +75,7 @@ function App() {
         <Router>
           <ScrollToTop />
           <RouteTransitionVideo />
-          <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center">
-              <div className="text-sm text-gray-600">Loading...</div>
-            </div>
-          }>
+          <Suspense fallback={<LoadingSpinner size="medium" message="Loading page..." />}>
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<PageTransitionWrapper><Home /></PageTransitionWrapper>} />

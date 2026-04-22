@@ -116,7 +116,7 @@ const RouteTransitionVideo: React.FC = () => {
         autoPlay
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         style={{
           width: '100vw',
           height: '100vh',
