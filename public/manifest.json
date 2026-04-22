@@ -1,0 +1,29 @@
+{
+  "name": "VisionAI - AI Solutions & Consulting",
+  "short_name": "VisionAI",
+  "description": "Transform your business with intelligent AI solutions",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/vision-removebg-preview.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/vision-removebg-preview.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "splash_pages": null,
+  "categories": ["business", "productivity", "technology"],
+  "lang": "en-US",
+  "dir": "ltr"
+}

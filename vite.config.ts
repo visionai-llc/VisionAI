@@ -57,6 +57,21 @@ export default defineConfig(({ command, mode }) => {
           const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
           return `js/[name]-[hash].js`;
         },
+        assetFileNames: (assetInfo) => {
+          const name = assetInfo.name || 'asset';
+          const info = name.split('.');
+          const ext = info[info.length - 1];
+          if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)$/.test(name)) {
+            return `media/[name]-[hash][extname]`;
+          }
+          if (/\.(png|jpe?g|gif|svg|webp|avif)$/.test(name)) {
+            return `images/[name]-[hash][extname]`;
+          }
+          if (/\.(woff2?|eot|ttf|otf)$/.test(name)) {
+            return `fonts/[name]-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        },
       },
     },
     target: 'esnext',
@@ -65,8 +80,16 @@ export default defineConfig(({ command, mode }) => {
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+      },
+      mangle: {
+        safari10: true,
       },
     },
+    cssCodeSplit: true,
+    cssMinify: true,
+    sourcemap: false,
+    reportCompressedSize: false,
   },
   };
 });

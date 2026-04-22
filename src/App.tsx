@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import RouteTransitionVideo from './components/RouteTransitionVideo';
 import PageTransitionWrapper from './components/PageTransitionWrapper';
 import LoadingSpinner from './components/LoadingSpinner';
+import { registerServiceWorker } from './utils/serviceWorker';
 
 
 // Route-based lazy loaded pages with prefetch optimization
@@ -69,6 +70,10 @@ function ScrollToTop() {
 }
 
 function App() {
+  React.useEffect(() => {
+    registerServiceWorker();
+  }, []);
+
   return (
     <ThemeProvider>
       <AuthProvider>

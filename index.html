@@ -20,6 +20,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Critical resource preloading -->
+    <link rel="preload" href="/vision-removebg-preview.png" as="image" fetchpriority="high">
+    <link rel="preload" href="/about.mov" as="video" fetchpriority="low">
+    <link rel="preload" href="/TCG.jpg" as="image" fetchpriority="low">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//unpkg.com">
+    
+    <!-- Service worker registration -->
+    <link rel="manifest" href="/manifest.json">
 
     <style>
         html, body {
